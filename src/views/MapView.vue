@@ -1,12 +1,15 @@
 <template>
     <div>
-        Enter Address:
+        Enter City Name and State Abbreviation:
         <input type="text" v-model="address" />
         <button @click="submitAddress">Submit</button>
+        <br />
+        (example: Los Angeles, CA)
     </div>
     <div v-if="coordinates">
         <p>Latitude: {{ lat_value }}, Longitude: {{ lon_value }}</p>
         <p>{{ forecast }}</p>
+        <img v-if="imageUrl" :src="imageUrl" alt="Fetched Image" />
     </div>
 </template>
 <script>
@@ -31,6 +34,8 @@ export default {
             const apiUrl1 = `https://geocode.maps.co/search?q=${encodeURIComponent(
                 this.address
             )}&api_key=${apiKey}&limit=1`;
+            let temp_lat = 0;
+            let temp_lon = 0;
 
 
             // Fetch the geocoding data
@@ -42,6 +47,8 @@ export default {
                         this.coordinates = true
                         this.lat_value = data[0].lat;
                         this.lon_value = data[0].lon;
+                        temp_lat = data[0].lat;
+                        temp_lon = data[0].lon;
                     } else {
                         console.error('No results found for the entered address.');
                     }
@@ -68,6 +75,20 @@ export default {
                 .catch((error) => {
                     console.error('Error fetching geocoding data:', error);
                 });
+
+            let mapURL = 'https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=800&height=600&center=lonlat:' + temp_lon + ',' + temp_lat + '&zoom=12.1401&apiKey=d548c5ed24604be6a9dd0d989631f783';
+            fetch(mapURL)
+                .then(response => response.json())
+                .then(data => {
+                    // Assuming the API response has an 'imageUrl' property
+                    this.imageUrl = data.imageUrl;
+                })
+                .catch(error => {
+                    console.error('Error fetching image:', error);
+                });
+
+
+
         }
     }
 };

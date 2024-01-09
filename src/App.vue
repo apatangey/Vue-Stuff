@@ -2,7 +2,8 @@
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/map">Map</router-link>
+    <router-link to="/map">Weather Forecaster</router-link> |
+    <router-link to="/todolist">Todo List</router-link>
   </nav>
   <router-view />
 </template>
